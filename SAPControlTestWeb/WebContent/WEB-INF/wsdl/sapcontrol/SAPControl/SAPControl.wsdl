@@ -1,0 +1,4410 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/" xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:SAPControl="urn:SAPControl" xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:SAPControl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="SAPControl" targetNamespace="urn:SAPControl">
+
+<types>
+
+ <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="urn:SAPControl">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <simpleType name="STATE-COLOR">
+   <restriction base="xsd:string">
+    <enumeration value="SAPControl-GRAY"/>
+    <enumeration value="SAPControl-GREEN"/>
+    <enumeration value="SAPControl-YELLOW"/>
+    <enumeration value="SAPControl-RED"/>
+   </restriction>
+  </simpleType>
+  <simpleType name="VISIBLE-LEVEL">
+   <restriction base="xsd:string">
+    <enumeration value="SAPControl-UNKNOWN"/>
+    <enumeration value="SAPControl-OPERATOR"/>
+    <enumeration value="SAPControl-EXPERT"/>
+    <enumeration value="SAPControl-DEVELOPER"/>
+   </restriction>
+  </simpleType>
+  <simpleType name="J2EE-PSTATE">
+   <restriction base="xsd:string">
+    <enumeration value="SAPControl-J2EE-STOPPED"/>
+    <enumeration value="SAPControl-J2EE-STARTING"/>
+    <enumeration value="SAPControl-J2EE-CORE-RUNNING"/>
+    <enumeration value="SAPControl-J2EE-RUNNING"/>
+    <enumeration value="SAPControl-J2EE-STOPPING"/>
+    <enumeration value="SAPControl-J2EE-MAINTENANCE"/>
+    <enumeration value="SAPControl-J2EE-UNKNOWN"/>
+   </restriction>
+  </simpleType>
+  <simpleType name="StartStopOption">
+   <restriction base="xsd:string">
+    <enumeration value="SAPControl-ALL-INSTANCES"/>
+    <enumeration value="SAPControl-SCS-INSTANCES"/>
+    <enumeration value="SAPControl-DIALOG-INSTANCES"/>
+    <enumeration value="SAPControl-ABAP-INSTANCES"/>
+    <enumeration value="SAPControl-J2EE-INSTANCES"/>
+    <enumeration value="SAPControl-PRIORITY-LEVEL"/>
+    <enumeration value="SAPControl-TREX-INSTANCES"/>
+    <enumeration value="SAPControl-ENQREP-INSTANCES"/>
+    <enumeration value="SAPControl-HDB-INSTANCES"/>
+    <enumeration value="SAPControl-ALLNOHDB-INSTANCES"/>
+   </restriction>
+  </simpleType>
+  <simpleType name="LogFileConfigOperation">
+   <restriction base="xsd:string">
+    <enumeration value="SAPControl-SET-LOGFILES"/>
+    <enumeration value="SAPControl-ADD-LOGFILES"/>
+    <enumeration value="SAPControl-REMOVE-LOGFILES"/>
+   </restriction>
+  </simpleType>
+  <simpleType name="RESTRICTION-TYPE">
+   <restriction base="xsd:string">
+    <enumeration value="SAPControl-RESTRICT-NONE"/>
+    <enumeration value="SAPControl-RESTRICT-INT"/>
+    <enumeration value="SAPControl-RESTRICT-FLOAT"/>
+    <enumeration value="SAPControl-RESTRICT-INTRANGE"/>
+    <enumeration value="SAPControl-RESTRICT-FLOATRANGE"/>
+    <enumeration value="SAPControl-RESTRICT-ENUM"/>
+    <enumeration value="SAPControl-RESTRICT-BOOL"/>
+   </restriction>
+  </simpleType>
+  <simpleType name="HAVerificationState">
+   <restriction base="xsd:string">
+    <enumeration value="SAPControl-HA-SUCCESS"/>
+    <enumeration value="SAPControl-HA-WARNING"/>
+    <enumeration value="SAPControl-HA-ERROR"/>
+   </restriction>
+  </simpleType>
+  <simpleType name="HACheckCategory">
+   <restriction base="xsd:string">
+    <enumeration value="SAPControl-SAP-CONFIGURATION"/>
+    <enumeration value="SAPControl-SAP-STATE"/>
+    <enumeration value="SAPControl-HA-CONFIGURATION"/>
+    <enumeration value="SAPControl-HA-STATE"/>
+   </restriction>
+  </simpleType>
+  <complexType name="ArrayOfString">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfInt">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="xsd:int"/>
+   </sequence>
+  </complexType>
+  <complexType name="OSProcess">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="description" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="dispstatus" type="SAPControl:STATE-COLOR"/>
+     <element maxOccurs="1" minOccurs="0" name="textstatus" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="starttime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="elapsedtime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="pid" type="xsd:int"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfOSProcess">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:OSProcess"/>
+   </sequence>
+  </complexType>
+  <complexType name="AlertNode">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="parent" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="ActualValue" type="SAPControl:STATE-COLOR"/>
+     <element maxOccurs="1" minOccurs="0" name="description" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Time" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="AnalyseTool" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="VisibleLevel" type="SAPControl:VISIBLE-LEVEL"/>
+     <element maxOccurs="1" minOccurs="1" name="HighAlertValue" type="SAPControl:STATE-COLOR"/>
+     <element maxOccurs="1" minOccurs="0" name="AlDescription" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="AlTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Tid" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfAlertNode">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:AlertNode"/>
+   </sequence>
+  </complexType>
+  <complexType name="DirEntry">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="filename" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="0" name="modtime" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfDirEntry">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:DirEntry"/>
+   </sequence>
+  </complexType>
+  <complexType name="SyslogEntry">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="Time" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Typ" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Client" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="User" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Tcode" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="MNo" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Text" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="Severity" type="SAPControl:STATE-COLOR"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfSyslogEntry">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:SyslogEntry"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfRawSyslogEntry">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="TaskHandlerQueue">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="Typ" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="Now" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="High" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="Max" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="Writes" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="Reads" type="xsd:int"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfTaskHandlerQueue">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:TaskHandlerQueue"/>
+   </sequence>
+  </complexType>
+  <complexType name="WorkProcess">
+   <sequence>
+     <element maxOccurs="1" minOccurs="1" name="No" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="Typ" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="Pid" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="Status" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Reason" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Start" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Err" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Sem" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Cpu" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Time" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Program" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Client" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="User" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Action" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Table" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfWorkProcess">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:WorkProcess"/>
+   </sequence>
+  </complexType>
+  <complexType name="SystemWorkProcess">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="Instance" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="No" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="Typ" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="Pid" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="Status" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Reason" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Start" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Err" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Sem" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Cpu" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Time" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Program" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Client" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="User" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Action" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Table" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfSystemWorkProcess">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:SystemWorkProcess"/>
+   </sequence>
+  </complexType>
+  <complexType name="Alert">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="Object" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Attribute" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="Value" type="SAPControl:STATE-COLOR"/>
+     <element maxOccurs="1" minOccurs="0" name="Description" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Time" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Tid" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Aid" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfAlert">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:Alert"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EEProcess">
+   <sequence>
+     <element maxOccurs="1" minOccurs="1" name="telnetPort" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="pid" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="restart" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="exitCode" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="state" type="SAPControl:J2EE-PSTATE"/>
+     <element maxOccurs="1" minOccurs="0" name="statetext" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="startTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="elapsedTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="restartCount" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="errorCount" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="cpu" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="debug" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EEProcess">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EEProcess"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EEProcess2">
+   <sequence>
+     <element maxOccurs="1" minOccurs="1" name="telnetPort" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="pid" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="restart" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="exitCode" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="state" type="SAPControl:J2EE-PSTATE"/>
+     <element maxOccurs="1" minOccurs="0" name="statetext" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="startTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="elapsedTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="restartCount" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="errorCount" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="cpu" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="debug" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="clusterId" type="xsd:int"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EEProcess2">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EEProcess2"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EEThread">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="startTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="updateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="taskupdateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="subtaskupdateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="task" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="subtask" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="classname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="user" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="pool" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="state" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="dispstatus" type="SAPControl:STATE-COLOR"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EEThread">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EEThread"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EEThread2">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="startTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="updateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="taskupdateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="subtaskupdateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="task" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="subtask" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="classname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="user" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="pool" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="state" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="dispstatus" type="SAPControl:STATE-COLOR"/>
+     <element maxOccurs="1" minOccurs="1" name="index" type="xsd:int"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EEThread2">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EEThread2"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EESession">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="IdHash" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="timeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="activeRequests" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="startTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="updateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="sticky" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="corrupt" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="backingStore" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EESession">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EESession"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EEWebSession">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="IdHash" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="timeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="activeRequests" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="startTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="updateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="state" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="backingStore" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="user" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EEWebSession">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EEWebSession"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EEWebSession2">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="IdHash" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="timeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="activeRequests" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="startTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="updateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="state" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="backingStore" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="user" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="AppName" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EEWebSession2">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EEWebSession2"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EECache">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="cachename" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="attrSize" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="keysSize" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="cachedObjects" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="usedObjects" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="puts" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="gets" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="hits" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="changes" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="removes" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="evictions" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="instanceInvalidations" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="clusterInvalidations" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="updateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="dispstatus" type="SAPControl:STATE-COLOR"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EECache">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EECache"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EECache2">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="description" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="owner" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="attrSize" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="keysSize" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="cachedObjects" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="usedObjects" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="puts" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="gets" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="hits" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="changes" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="removes" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="evictions" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="instanceInvalidations" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="clusterInvalidations" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="updateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="dispstatus" type="SAPControl:STATE-COLOR"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EECache2">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EECache2"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EEApplicationAlias">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="AppName" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Alias" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="TotalRequests" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="AppActive" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="IgnoreCookie" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EEApplicationAlias">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EEApplicationAlias"/>
+   </sequence>
+  </complexType>
+  <complexType name="InstanceVersionInfo">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="Filename" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="VersionInfo" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="Time" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfInstanceVersionInfo">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:InstanceVersionInfo"/>
+   </sequence>
+  </complexType>
+  <complexType name="GCInfo">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="reason" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="startTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="duration" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="cpuTime" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="objBytesBefore" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="objBytesAfter" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="objBytesFreed" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="clsBytesBefore" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="clsBytesAfter" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="clsBytesFreed" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="heapSize" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="unloadedClasses" type="xsd:int"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfGCInfo">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:GCInfo"/>
+   </sequence>
+  </complexType>
+  <complexType name="GCInfo2">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="reason" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="startTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="duration" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="cpuTime" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="objBytesBefore" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="objBytesAfter" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="objBytesFreed" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="clsBytesBefore" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="clsBytesAfter" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="clsBytesFreed" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="heapSize" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="unloadedClasses" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="pageFaults" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="dispstatus" type="SAPControl:STATE-COLOR"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfGCInfo2">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:GCInfo2"/>
+   </sequence>
+  </complexType>
+  <complexType name="HeapInfo">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="commitSize" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="maxUsedSize" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="initialSize" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="maxSize" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="dispstatus" type="SAPControl:STATE-COLOR"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfHeapInfo">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:HeapInfo"/>
+   </sequence>
+  </complexType>
+  <complexType name="InstanceProperty">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="property" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="propertytype" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="value" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfInstanceProperties">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:InstanceProperty"/>
+   </sequence>
+  </complexType>
+  <complexType name="LogFile">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="filename" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="0" name="modtime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="format" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfLogFile">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:LogFile"/>
+   </sequence>
+  </complexType>
+  <complexType name="AccessPoint">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="address" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="port" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="protocol" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="active" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfAccessPoint">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:AccessPoint"/>
+   </sequence>
+  </complexType>
+  <complexType name="SAPInstance">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="hostname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="instanceNr" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="httpPort" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="httpsPort" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="startPriority" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="features" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="dispstatus" type="SAPControl:STATE-COLOR"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfSAPInstance">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:SAPInstance"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EEEJBSession">
+   <sequence>
+     <element maxOccurs="1" minOccurs="1" name="IdHash" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="state" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="activeRequests" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="totalRequests" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="backingStore" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="startTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="updateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="responseTime" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="user" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="transaction" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="ejb" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="application" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="reference" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EEEJBSession">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EEEJBSession"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EERemoteObject">
+   <sequence>
+     <element maxOccurs="1" minOccurs="1" name="IdHash" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="address" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="port" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="protocol" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="direction" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="stubs" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="implementations" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="creationTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="updateTime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EERemoteObject">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EERemoteObject"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EEClusterMsg">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="service" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="id" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="count" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="length" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="avg-length" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="max-length" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="count-p2p-msg" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="count-p2p-request" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="count-p2p-reply" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="count-broadcast-msg" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="count-broadcast-request" type="xsd:long"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EEClusterMsg">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EEClusterMsg"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EESharedTableInfo">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="table" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="used" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="peak" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="limit" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="dispstatus" type="SAPControl:STATE-COLOR"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EESharedTableInfo">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EESharedTableInfo"/>
+   </sequence>
+  </complexType>
+  <complexType name="J2EEComponentInfo">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="startupmode" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="status" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="expectedstatus" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="details" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="dispstatus" type="SAPControl:STATE-COLOR"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfJ2EEComponentInfo">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:J2EEComponentInfo"/>
+   </sequence>
+  </complexType>
+  <complexType name="ICMThread">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="id" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="requests" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="0" name="status" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="requesttype" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfICMThread">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:ICMThread"/>
+   </sequence>
+  </complexType>
+  <complexType name="ICMConnection">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="conid" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="protocol" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="role" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="requesttype" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="peer-address" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="peer-port" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="local-address" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="local-port" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="proc-timeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="keepalive-timeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="connection-time" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="nihdl" type="xsd:int"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfICMConnection">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:ICMConnection"/>
+   </sequence>
+  </complexType>
+  <complexType name="ICMCacheEntry">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="version" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="valid" type="xsd:boolean"/>
+     <element maxOccurs="1" minOccurs="0" name="cache" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="creation-time" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="last-access-time" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="expiration-time" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="cacheurl" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfICMCacheEntry">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:ICMCacheEntry"/>
+   </sequence>
+  </complexType>
+  <complexType name="ICMProxyConnection">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="conid" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="role" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="peer-address" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="peer-port" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="local-address" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="local-port" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="status" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="nihdl" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="socket" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="partner" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="internal-convid" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="external-convid" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="snc-context-length" nillable="true" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="failover-status" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="disconnect-time" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="objectid" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="tid-uid-mode" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfICMProxyConnection">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:ICMProxyConnection"/>
+   </sequence>
+  </complexType>
+  <complexType name="WebDispServer">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="sid" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="instance" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="hostname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="protocol" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="status" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="capacity" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="load" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="port" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="cur-conn" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="peak-conn" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="max-conn" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="sec-port" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="sec-cur-conn" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="sec-peak-conn" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="sec-max-conn" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="req-cnt-stateless" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="req-cnt-stateful" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="req-cnt-group" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="resp-time-min" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="resp-time-avg" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="resp-time-last" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="ping-time-last" type="xsd:long"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfWebDispServer">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:WebDispServer"/>
+   </sequence>
+  </complexType>
+  <complexType name="ParameterRestriction">
+   <sequence>
+     <element maxOccurs="1" minOccurs="1" name="type" type="SAPControl:RESTRICTION-TYPE"/>
+     <element maxOccurs="1" minOccurs="0" name="int-min" nillable="true" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="0" name="int-max" nillable="true" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="0" name="float-min" nillable="true" type="xsd:double"/>
+     <element maxOccurs="1" minOccurs="0" name="float-max" nillable="true" type="xsd:double"/>
+     <element maxOccurs="1" minOccurs="0" name="valuemap" nillable="true" type="SAPControl:ArrayOfString"/>
+   </sequence>
+  </complexType>
+  <complexType name="SubProfileParameter">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="description" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="unit" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="mandatory" type="xsd:boolean"/>
+     <element maxOccurs="1" minOccurs="1" name="restriction" type="SAPControl:ParameterRestriction"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfSubProfileParameter">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:SubProfileParameter"/>
+   </sequence>
+  </complexType>
+  <complexType name="ProfileParameter">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="group" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="description" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="unit" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="restriction" type="SAPControl:ParameterRestriction"/>
+     <element maxOccurs="1" minOccurs="0" name="sub-para" nillable="true" type="SAPControl:ArrayOfSubProfileParameter"/>
+     <element maxOccurs="1" minOccurs="0" name="value" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="dynamic-value" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="values" nillable="true" type="SAPControl:ArrayOfString"/>
+     <element maxOccurs="1" minOccurs="0" name="dynamic-values" nillable="true" type="SAPControl:ArrayOfString"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfProfileParameter">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:ProfileParameter"/>
+   </sequence>
+  </complexType>
+  <complexType name="SetProfileParameter">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="value" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="values" nillable="true" type="SAPControl:ArrayOfString"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfSetProfileParameter">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:SetProfileParameter"/>
+   </sequence>
+  </complexType>
+  <complexType name="EnqLock">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="lock-name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="lock-arg" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="lock-mode" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="owner" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="owner-vb" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="use-count-owner" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="use-count-owner-vb" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="client" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="user" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="transaction" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="object" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="backup" type="xsd:boolean"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfEnqLock">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:EnqLock"/>
+   </sequence>
+  </complexType>
+  <simpleType name="SnapshotZip">
+   <restriction base="xsd:base64Binary">
+   </restriction>
+  </simpleType>
+  <complexType name="SnapshotInfo">
+   <sequence>
+     <element maxOccurs="1" minOccurs="0" name="filename" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="0" name="modtime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="description" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfSnapshotInfo">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:SnapshotInfo"/>
+   </sequence>
+  </complexType>
+  <complexType name="HACheck">
+   <sequence>
+     <element maxOccurs="1" minOccurs="1" name="state" type="SAPControl:HAVerificationState"/>
+     <element maxOccurs="1" minOccurs="1" name="category" type="SAPControl:HACheckCategory"/>
+     <element maxOccurs="1" minOccurs="0" name="description" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="comment" nillable="true" type="xsd:string"/>
+   </sequence>
+  </complexType>
+  <complexType name="ArrayOfHACheck">
+   <sequence>
+    <element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="SAPControl:HACheck"/>
+   </sequence>
+  </complexType>
+  <!-- operation request element -->
+  <element name="Start">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="runlevel" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="StartResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="InstanceStart">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="host" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="nr" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="runlevel" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="InstanceStartResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="Bootstrap">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="host" nillable="true" type="xsd:string"/>
+     <element default="-1" maxOccurs="1" minOccurs="1" name="nr" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="BootstrapResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="Stop">
+   <complexType>
+    <sequence>
+     <element default="0" maxOccurs="1" minOccurs="1" name="softtimeout" type="xsd:int"/>
+     <element default="0" maxOccurs="1" minOccurs="1" name="IsSystemStop" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="StopResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="InstanceStop">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="host" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="nr" type="xsd:int"/>
+     <element default="0" maxOccurs="1" minOccurs="1" name="softtimeout" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="InstanceStopResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="Shutdown">
+   <complexType>
+    <sequence>
+     <element default="0" maxOccurs="1" minOccurs="1" name="IsSystemStop" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ShutdownResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ParameterValue">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="parameter" nillable="false" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ParameterValueResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="value" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetProcessList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetProcessListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="process" nillable="true" type="SAPControl:ArrayOfOSProcess"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetStartProfile">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetStartProfileResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="lines" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetTraceFile">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetTraceFileResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="lines" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetAlertTree">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetAlertTreeResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="tree" nillable="true" type="SAPControl:ArrayOfAlertNode"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetAlerts">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="RootTid" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetAlertsResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="RootTidName" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="alert" nillable="false" type="SAPControl:ArrayOfAlert"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="RestartService">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="RestartServiceResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="StopService">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="StopServiceResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetEnvironment">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetEnvironmentResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="env" nillable="true" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ListDeveloperTraces">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ListDeveloperTracesResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="file" nillable="true" type="SAPControl:ArrayOfDirEntry"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ReadDeveloperTrace">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="filename" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="size" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ReadDeveloperTraceResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="lines" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="RestartInstance">
+   <complexType>
+    <sequence>
+     <element default="0" maxOccurs="1" minOccurs="1" name="softtimeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="runlevel" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="RestartInstanceResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="SendSignal">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="pid" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="signal" nillable="false" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="SendSignalResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetVersionInfo">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetVersionInfoResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="version" nillable="true" type="SAPControl:ArrayOfInstanceVersionInfo"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetQueueStatistic">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetQueueStatisticResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="queue" nillable="true" type="SAPControl:ArrayOfTaskHandlerQueue"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetInstanceProperties">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetInstancePropertiesResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="properties" nillable="true" type="SAPControl:ArrayOfInstanceProperties"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="OSExecute">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="command" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="async" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="timeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="protocolfile" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="OSExecuteResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="exitcode" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="pid" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="lines" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ReadLogFile">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="filename" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="filter" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="language" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="maxentries" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="statecookie" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ReadLogFileResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="format" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="startcookie" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="endcookie" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="fields" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ListLogFiles">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ListLogFilesResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="file" nillable="true" type="SAPControl:ArrayOfLogFile"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="AnalyseLogFiles">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="starttime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="endtime" nillable="true" type="xsd:string"/>
+     <element default="2" maxOccurs="1" minOccurs="1" name="severity-level" type="xsd:int"/>
+     <element default="10000" maxOccurs="1" minOccurs="1" name="maxentries" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="AnalyseLogFilesResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="format" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="fields" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetAccessPointList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetAccessPointListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="accesspoint" nillable="true" type="SAPControl:ArrayOfAccessPoint"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetSystemInstanceList">
+   <complexType>
+    <sequence>
+     <element default="0" maxOccurs="1" minOccurs="1" name="timeout" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetSystemInstanceListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="instance" nillable="true" type="SAPControl:ArrayOfSAPInstance"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="StartSystem">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="options" type="SAPControl:StartStopOption"/>
+     <element maxOccurs="1" minOccurs="0" name="prioritylevel" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="waittimeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="runlevel" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="StartSystemResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="StopSystem">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="options" type="SAPControl:StartStopOption"/>
+     <element maxOccurs="1" minOccurs="0" name="prioritylevel" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="softtimeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="waittimeout" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="StopSystemResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="RestartSystem">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="options" type="SAPControl:StartStopOption"/>
+     <element maxOccurs="1" minOccurs="0" name="prioritylevel" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="softtimeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="waittimeout" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="runlevel" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="RestartSystemResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="AccessCheck">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="function" nillable="false" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="AccessCheckResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetProcessParameter">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processtype" nillable="true" type="xsd:string"/>
+     <element default="-1" maxOccurs="1" minOccurs="1" name="pid" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetProcessParameterResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="parameter" nillable="true" type="SAPControl:ArrayOfProfileParameter"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="SetProcessParameter">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processtype" nillable="true" type="xsd:string"/>
+     <element default="-1" maxOccurs="1" minOccurs="1" name="pid" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="parameter" nillable="false" type="SAPControl:ArrayOfSetProfileParameter"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="SetProcessParameterResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ShmDetach">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ShmDetachResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetSecNetworkId">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="service-ip" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="service-port" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="version" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="challenge" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetSecNetworkIdResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="key" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="proof" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetNetworkId">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="service-ip" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="service-port" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="version" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetNetworkIdResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="key" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="CreateSnapshot">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="description" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="datcol-param" nillable="true" type="xsd:string"/>
+     <element default="2" maxOccurs="1" minOccurs="1" name="analyse-severity-level" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="analyse-starttime" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="analyse-endtime" nillable="true" type="xsd:string"/>
+     <element default="10000" maxOccurs="1" minOccurs="1" name="analyze-maxentries" type="xsd:int"/>
+     <element default="-10000" maxOccurs="1" minOccurs="1" name="maxentries" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="logfiles" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="CreateSnapshotResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="filename" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ReadSnapshot">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="filename" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ReadSnapshotResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="snapshot" nillable="true" type="SAPControl:SnapshotZip"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ListSnapshots">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ListSnapshotsResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="snapshots" nillable="true" type="SAPControl:ArrayOfSnapshotInfo"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="DeleteSnapshots">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="snapshots" nillable="true" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="DeleteSnapshotsResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ABAPReadSyslog">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ABAPReadSyslogResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="log" nillable="true" type="SAPControl:ArrayOfSyslogEntry"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ABAPReadRawSyslog">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ABAPReadRawSyslogResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="log" nillable="true" type="SAPControl:ArrayOfRawSyslogEntry"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ABAPGetWPTable">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ABAPGetWPTableResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="workprocess" nillable="true" type="SAPControl:ArrayOfWorkProcess"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ABAPAcknowledgeAlerts">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="R3Client" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="R3User" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="R3Password" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="Aid" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ABAPAcknowledgeAlertsResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="alert" nillable="true" type="SAPControl:ArrayOfInt"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ABAPGetSystemWPTable">
+   <complexType>
+    <sequence>
+     <element default="false" maxOccurs="1" minOccurs="1" name="activeonly" type="xsd:boolean"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ABAPGetSystemWPTableResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="workprocess" nillable="true" type="SAPControl:ArrayOfSystemWorkProcess"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="RequestTicket">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="host" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="nr" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="challenge" nillable="false" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="RequestTicketResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="SendTicket">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="proof" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="challenge" nillable="false" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="SendTicketResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ConfigureLogFileList">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="operation" type="SAPControl:LogFileConfigOperation"/>
+     <element maxOccurs="1" minOccurs="0" name="logfiles" nillable="true" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ConfigureLogFileListResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetLogFileList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetLogFileListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="logfiles" nillable="true" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="RequestLogonFile">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="user" nillable="false" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="RequestLogonFileResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="filename" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="HACheckConfig">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="HACheckConfigResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="check" nillable="true" type="SAPControl:ArrayOfHACheck"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="HACheckFailoverConfig">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="HACheckFailoverConfigResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="check" nillable="true" type="SAPControl:ArrayOfHACheck"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="HAGetFailoverConfig">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="HAGetFailoverConfigResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="HAActive" type="xsd:boolean"/>
+     <element maxOccurs="1" minOccurs="0" name="HAProductVersion" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="HASAPInterfaceVersion" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="HADocumentation" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="HAActiveNode" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="HANodes" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="HAFailoverToNode">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="node" nillable="false" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="HAFailoverToNodeResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="StartBypassHA">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="runlevel" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="StartBypassHAResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="StopBypassHA">
+   <complexType>
+    <sequence>
+     <element default="0" maxOccurs="1" minOccurs="1" name="softtimeout" type="xsd:int"/>
+     <element default="0" maxOccurs="1" minOccurs="1" name="IsSystemStop" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="StopBypassHAResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="GetCallstack">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="pid" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="GetCallstackResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="lines" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetProcessList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetProcessListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="process" nillable="true" type="SAPControl:ArrayOfJ2EEProcess"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetProcessList2">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetProcessList2Response">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="process" nillable="true" type="SAPControl:ArrayOfJ2EEProcess2"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEControlProcess">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="processname" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="function" nillable="false" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEControlProcessResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEControlCluster">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="processname" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="function" nillable="false" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="host" nillable="true" type="xsd:string"/>
+     <element default="-1" maxOccurs="1" minOccurs="1" name="nr" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEControlClusterResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetThreadList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetThreadListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="thread" nillable="true" type="SAPControl:ArrayOfJ2EEThread"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetThreadList2">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetThreadList2Response">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="thread" nillable="true" type="SAPControl:ArrayOfJ2EEThread2"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetSessionList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetSessionListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="session" nillable="true" type="SAPControl:ArrayOfJ2EESession"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetWebSessionList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetWebSessionListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="session" nillable="true" type="SAPControl:ArrayOfJ2EEWebSession"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetWebSessionList2">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetWebSessionList2Response">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="session" nillable="true" type="SAPControl:ArrayOfJ2EEWebSession2"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetCacheStatistic">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetCacheStatisticResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="cache" nillable="true" type="SAPControl:ArrayOfJ2EECache"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetCacheStatistic2">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetCacheStatistic2Response">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="cache" nillable="true" type="SAPControl:ArrayOfJ2EECache2"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetApplicationAliasList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetApplicationAliasListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="alias" nillable="true" type="SAPControl:ArrayOfJ2EEApplicationAlias"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetVMGCHistory">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetVMGCHistoryResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="gc" nillable="true" type="SAPControl:ArrayOfGCInfo"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetVMGCHistory2">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetVMGCHistory2Response">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="gc" nillable="true" type="SAPControl:ArrayOfGCInfo2"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetVMHeapInfo">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetVMHeapInfoResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="heap" nillable="true" type="SAPControl:ArrayOfHeapInfo"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetEJBSessionList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetEJBSessionListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="ejbsession" nillable="true" type="SAPControl:ArrayOfJ2EEEJBSession"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetRemoteObjectList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetRemoteObjectListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="remoteobject" nillable="true" type="SAPControl:ArrayOfJ2EERemoteObject"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetClusterMsgList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetClusterMsgListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="msg" nillable="true" type="SAPControl:ArrayOfJ2EEClusterMsg"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetSharedTableInfo">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetSharedTableInfoResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="jsf" nillable="true" type="SAPControl:ArrayOfJ2EESharedTableInfo"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEEnableDbgSession">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processname" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="flags" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="client" nillable="false" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEEnableDbgSessionResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="key" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="port" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEDisableDbgSession">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="key" nillable="false" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEDisableDbgSessionResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetThreadCallStack">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="index" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetThreadCallStackResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="lines" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetThreadTaskStack">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="index" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetThreadTaskStackResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="1" name="lines" nillable="false" type="SAPControl:ArrayOfString"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEGetComponentList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEGetComponentListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="component" nillable="true" type="SAPControl:ArrayOfJ2EEComponentInfo"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="J2EEControlComponents">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="processName" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="operation" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="componentType" nillable="true" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="componentNames" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="J2EEControlComponentsResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ICMGetThreadList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ICMGetThreadListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="thread" nillable="true" type="SAPControl:ArrayOfICMThread"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ICMGetConnectionList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ICMGetConnectionListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="connection" nillable="true" type="SAPControl:ArrayOfICMConnection"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ICMGetCacheEntries">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ICMGetCacheEntriesResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="entry" nillable="true" type="SAPControl:ArrayOfICMCacheEntry"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="ICMGetProxyConnectionList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="ICMGetProxyConnectionListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="connection" nillable="true" type="SAPControl:ArrayOfICMProxyConnection"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="WebDispGetServerList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="WebDispGetServerListResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="server" nillable="true" type="SAPControl:ArrayOfWebDispServer"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="EnqGetLockTable">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="EnqGetLockTableResponse">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="lock" nillable="true" type="SAPControl:ArrayOfEnqLock"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="EnqRemoveLocks">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="0" name="lock" nillable="true" type="SAPControl:ArrayOfEnqLock"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="EnqRemoveLocksResponse">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="EnqGetStatistic">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="EnqStatistic">
+   <complexType>
+    <sequence>
+     <element maxOccurs="1" minOccurs="1" name="owner-now" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="owner-high" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="owner-max" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="owner-state" type="SAPControl:STATE-COLOR"/>
+     <element maxOccurs="1" minOccurs="1" name="arguments-now" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="arguments-high" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="arguments-max" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="arguments-state" type="SAPControl:STATE-COLOR"/>
+     <element maxOccurs="1" minOccurs="1" name="locks-now" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="locks-high" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="locks-max" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="1" name="locks-state" type="SAPControl:STATE-COLOR"/>
+     <element maxOccurs="1" minOccurs="1" name="enqueue-requests" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="enqueue-rejects" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="enqueue-errors" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="dequeue-requests" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="dequeue-errors" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="dequeue-all-requests" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="cleanup-requests" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="backup-requests" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="reporting-requests" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="compress-requests" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="verify-requests" type="xsd:long"/>
+     <element maxOccurs="1" minOccurs="1" name="lock-time" type="xsd:double"/>
+     <element maxOccurs="1" minOccurs="1" name="lock-wait-time" type="xsd:double"/>
+     <element maxOccurs="1" minOccurs="1" name="server-time" type="xsd:double"/>
+     <element maxOccurs="1" minOccurs="1" name="replication-state" type="SAPControl:STATE-COLOR"/>
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+
+</types>
+
+<message name="StartRequest">
+ <part element="SAPControl:Start" name="parameters"/>
+</message>
+
+<message name="StartResponse">
+ <part element="SAPControl:StartResponse" name="parameters"/>
+</message>
+
+<message name="InstanceStartRequest">
+ <part element="SAPControl:InstanceStart" name="parameters"/>
+</message>
+
+<message name="InstanceStartResponse">
+ <part element="SAPControl:InstanceStartResponse" name="parameters"/>
+</message>
+
+<message name="BootstrapRequest">
+ <part element="SAPControl:Bootstrap" name="parameters"/>
+</message>
+
+<message name="BootstrapResponse">
+ <part element="SAPControl:BootstrapResponse" name="parameters"/>
+</message>
+
+<message name="StopRequest">
+ <part element="SAPControl:Stop" name="parameters"/>
+</message>
+
+<message name="StopResponse">
+ <part element="SAPControl:StopResponse" name="parameters"/>
+</message>
+
+<message name="InstanceStopRequest">
+ <part element="SAPControl:InstanceStop" name="parameters"/>
+</message>
+
+<message name="InstanceStopResponse">
+ <part element="SAPControl:InstanceStopResponse" name="parameters"/>
+</message>
+
+<message name="ShutdownRequest">
+ <part element="SAPControl:Shutdown" name="parameters"/>
+</message>
+
+<message name="ShutdownResponse">
+ <part element="SAPControl:ShutdownResponse" name="parameters"/>
+</message>
+
+<message name="ParameterValueRequest">
+ <part element="SAPControl:ParameterValue" name="parameters"/>
+</message>
+
+<message name="ParameterValueResponse">
+ <part element="SAPControl:ParameterValueResponse" name="parameters"/>
+</message>
+
+<message name="GetProcessListRequest">
+ <part element="SAPControl:GetProcessList" name="parameters"/>
+</message>
+
+<message name="GetProcessListResponse">
+ <part element="SAPControl:GetProcessListResponse" name="parameters"/>
+</message>
+
+<message name="GetStartProfileRequest">
+ <part element="SAPControl:GetStartProfile" name="parameters"/>
+</message>
+
+<message name="GetStartProfileResponse">
+ <part element="SAPControl:GetStartProfileResponse" name="parameters"/>
+</message>
+
+<message name="GetTraceFileRequest">
+ <part element="SAPControl:GetTraceFile" name="parameters"/>
+</message>
+
+<message name="GetTraceFileResponse">
+ <part element="SAPControl:GetTraceFileResponse" name="parameters"/>
+</message>
+
+<message name="GetAlertTreeRequest">
+ <part element="SAPControl:GetAlertTree" name="parameters"/>
+</message>
+
+<message name="GetAlertTreeResponse">
+ <part element="SAPControl:GetAlertTreeResponse" name="parameters"/>
+</message>
+
+<message name="GetAlertsRequest">
+ <part element="SAPControl:GetAlerts" name="parameters"/>
+</message>
+
+<message name="GetAlertsResponse">
+ <part element="SAPControl:GetAlertsResponse" name="parameters"/>
+</message>
+
+<message name="RestartServiceRequest">
+ <part element="SAPControl:RestartService" name="parameters"/>
+</message>
+
+<message name="RestartServiceResponse">
+ <part element="SAPControl:RestartServiceResponse" name="parameters"/>
+</message>
+
+<message name="StopServiceRequest">
+ <part element="SAPControl:StopService" name="parameters"/>
+</message>
+
+<message name="StopServiceResponse">
+ <part element="SAPControl:StopServiceResponse" name="parameters"/>
+</message>
+
+<message name="GetEnvironmentRequest">
+ <part element="SAPControl:GetEnvironment" name="parameters"/>
+</message>
+
+<message name="GetEnvironmentResponse">
+ <part element="SAPControl:GetEnvironmentResponse" name="parameters"/>
+</message>
+
+<message name="ListDeveloperTracesRequest">
+ <part element="SAPControl:ListDeveloperTraces" name="parameters"/>
+</message>
+
+<message name="ListDeveloperTracesResponse">
+ <part element="SAPControl:ListDeveloperTracesResponse" name="parameters"/>
+</message>
+
+<message name="ReadDeveloperTraceRequest">
+ <part element="SAPControl:ReadDeveloperTrace" name="parameters"/>
+</message>
+
+<message name="ReadDeveloperTraceResponse">
+ <part element="SAPControl:ReadDeveloperTraceResponse" name="parameters"/>
+</message>
+
+<message name="RestartInstanceRequest">
+ <part element="SAPControl:RestartInstance" name="parameters"/>
+</message>
+
+<message name="RestartInstanceResponse">
+ <part element="SAPControl:RestartInstanceResponse" name="parameters"/>
+</message>
+
+<message name="SendSignalRequest">
+ <part element="SAPControl:SendSignal" name="parameters"/>
+</message>
+
+<message name="SendSignalResponse">
+ <part element="SAPControl:SendSignalResponse" name="parameters"/>
+</message>
+
+<message name="GetVersionInfoRequest">
+ <part element="SAPControl:GetVersionInfo" name="parameters"/>
+</message>
+
+<message name="GetVersionInfoResponse">
+ <part element="SAPControl:GetVersionInfoResponse" name="parameters"/>
+</message>
+
+<message name="GetQueueStatisticRequest">
+ <part element="SAPControl:GetQueueStatistic" name="parameters"/>
+</message>
+
+<message name="GetQueueStatisticResponse">
+ <part element="SAPControl:GetQueueStatisticResponse" name="parameters"/>
+</message>
+
+<message name="GetInstancePropertiesRequest">
+ <part element="SAPControl:GetInstanceProperties" name="parameters"/>
+</message>
+
+<message name="GetInstancePropertiesResponse">
+ <part element="SAPControl:GetInstancePropertiesResponse" name="parameters"/>
+</message>
+
+<message name="OSExecuteRequest">
+ <part element="SAPControl:OSExecute" name="parameters"/>
+</message>
+
+<message name="OSExecuteResponse">
+ <part element="SAPControl:OSExecuteResponse" name="parameters"/>
+</message>
+
+<message name="ReadLogFileRequest">
+ <part element="SAPControl:ReadLogFile" name="parameters"/>
+</message>
+
+<message name="ReadLogFileResponse">
+ <part element="SAPControl:ReadLogFileResponse" name="parameters"/>
+</message>
+
+<message name="ListLogFilesRequest">
+ <part element="SAPControl:ListLogFiles" name="parameters"/>
+</message>
+
+<message name="ListLogFilesResponse">
+ <part element="SAPControl:ListLogFilesResponse" name="parameters"/>
+</message>
+
+<message name="AnalyseLogFilesRequest">
+ <part element="SAPControl:AnalyseLogFiles" name="parameters"/>
+</message>
+
+<message name="AnalyseLogFilesResponse">
+ <part element="SAPControl:AnalyseLogFilesResponse" name="parameters"/>
+</message>
+
+<message name="GetAccessPointListRequest">
+ <part element="SAPControl:GetAccessPointList" name="parameters"/>
+</message>
+
+<message name="GetAccessPointListResponse">
+ <part element="SAPControl:GetAccessPointListResponse" name="parameters"/>
+</message>
+
+<message name="GetSystemInstanceListRequest">
+ <part element="SAPControl:GetSystemInstanceList" name="parameters"/>
+</message>
+
+<message name="GetSystemInstanceListResponse">
+ <part element="SAPControl:GetSystemInstanceListResponse" name="parameters"/>
+</message>
+
+<message name="StartSystemRequest">
+ <part element="SAPControl:StartSystem" name="parameters"/>
+</message>
+
+<message name="StartSystemResponse">
+ <part element="SAPControl:StartSystemResponse" name="parameters"/>
+</message>
+
+<message name="StopSystemRequest">
+ <part element="SAPControl:StopSystem" name="parameters"/>
+</message>
+
+<message name="StopSystemResponse">
+ <part element="SAPControl:StopSystemResponse" name="parameters"/>
+</message>
+
+<message name="RestartSystemRequest">
+ <part element="SAPControl:RestartSystem" name="parameters"/>
+</message>
+
+<message name="RestartSystemResponse">
+ <part element="SAPControl:RestartSystemResponse" name="parameters"/>
+</message>
+
+<message name="AccessCheckRequest">
+ <part element="SAPControl:AccessCheck" name="parameters"/>
+</message>
+
+<message name="AccessCheckResponse">
+ <part element="SAPControl:AccessCheckResponse" name="parameters"/>
+</message>
+
+<message name="GetProcessParameterRequest">
+ <part element="SAPControl:GetProcessParameter" name="parameters"/>
+</message>
+
+<message name="GetProcessParameterResponse">
+ <part element="SAPControl:GetProcessParameterResponse" name="parameters"/>
+</message>
+
+<message name="SetProcessParameterRequest">
+ <part element="SAPControl:SetProcessParameter" name="parameters"/>
+</message>
+
+<message name="SetProcessParameterResponse">
+ <part element="SAPControl:SetProcessParameterResponse" name="parameters"/>
+</message>
+
+<message name="ShmDetachRequest">
+ <part element="SAPControl:ShmDetach" name="parameters"/>
+</message>
+
+<message name="ShmDetachResponse">
+ <part element="SAPControl:ShmDetachResponse" name="parameters"/>
+</message>
+
+<message name="GetSecNetworkIdRequest">
+ <part element="SAPControl:GetSecNetworkId" name="parameters"/>
+</message>
+
+<message name="GetSecNetworkIdResponse">
+ <part element="SAPControl:GetSecNetworkIdResponse" name="parameters"/>
+</message>
+
+<message name="GetNetworkIdRequest">
+ <part element="SAPControl:GetNetworkId" name="parameters"/>
+</message>
+
+<message name="GetNetworkIdResponse">
+ <part element="SAPControl:GetNetworkIdResponse" name="parameters"/>
+</message>
+
+<message name="CreateSnapshotRequest">
+ <part element="SAPControl:CreateSnapshot" name="parameters"/>
+</message>
+
+<message name="CreateSnapshotResponse">
+ <part element="SAPControl:CreateSnapshotResponse" name="parameters"/>
+</message>
+
+<message name="ReadSnapshotRequest">
+ <part element="SAPControl:ReadSnapshot" name="parameters"/>
+</message>
+
+<message name="ReadSnapshotResponse">
+ <part element="SAPControl:ReadSnapshotResponse" name="parameters"/>
+</message>
+
+<message name="ListSnapshotsRequest">
+ <part element="SAPControl:ListSnapshots" name="parameters"/>
+</message>
+
+<message name="ListSnapshotsResponse">
+ <part element="SAPControl:ListSnapshotsResponse" name="parameters"/>
+</message>
+
+<message name="DeleteSnapshotsRequest">
+ <part element="SAPControl:DeleteSnapshots" name="parameters"/>
+</message>
+
+<message name="DeleteSnapshotsResponse">
+ <part element="SAPControl:DeleteSnapshotsResponse" name="parameters"/>
+</message>
+
+<message name="ABAPReadSyslogRequest">
+ <part element="SAPControl:ABAPReadSyslog" name="parameters"/>
+</message>
+
+<message name="ABAPReadSyslogResponse">
+ <part element="SAPControl:ABAPReadSyslogResponse" name="parameters"/>
+</message>
+
+<message name="ABAPReadRawSyslogRequest">
+ <part element="SAPControl:ABAPReadRawSyslog" name="parameters"/>
+</message>
+
+<message name="ABAPReadRawSyslogResponse">
+ <part element="SAPControl:ABAPReadRawSyslogResponse" name="parameters"/>
+</message>
+
+<message name="ABAPGetWPTableRequest">
+ <part element="SAPControl:ABAPGetWPTable" name="parameters"/>
+</message>
+
+<message name="ABAPGetWPTableResponse">
+ <part element="SAPControl:ABAPGetWPTableResponse" name="parameters"/>
+</message>
+
+<message name="ABAPAcknowledgeAlertsRequest">
+ <part element="SAPControl:ABAPAcknowledgeAlerts" name="parameters"/>
+</message>
+
+<message name="ABAPAcknowledgeAlertsResponse">
+ <part element="SAPControl:ABAPAcknowledgeAlertsResponse" name="parameters"/>
+</message>
+
+<message name="ABAPGetSystemWPTableRequest">
+ <part element="SAPControl:ABAPGetSystemWPTable" name="parameters"/>
+</message>
+
+<message name="ABAPGetSystemWPTableResponse">
+ <part element="SAPControl:ABAPGetSystemWPTableResponse" name="parameters"/>
+</message>
+
+<message name="RequestTicketRequest">
+ <part element="SAPControl:RequestTicket" name="parameters"/>
+</message>
+
+<message name="RequestTicketResponse">
+ <part element="SAPControl:RequestTicketResponse" name="parameters"/>
+</message>
+
+<message name="SendTicketRequest">
+ <part element="SAPControl:SendTicket" name="parameters"/>
+</message>
+
+<message name="SendTicketResponse">
+ <part element="SAPControl:SendTicketResponse" name="parameters"/>
+</message>
+
+<message name="ConfigureLogFileListRequest">
+ <part element="SAPControl:ConfigureLogFileList" name="parameters"/>
+</message>
+
+<message name="ConfigureLogFileListResponse">
+ <part element="SAPControl:ConfigureLogFileListResponse" name="parameters"/>
+</message>
+
+<message name="GetLogFileListRequest">
+ <part element="SAPControl:GetLogFileList" name="parameters"/>
+</message>
+
+<message name="GetLogFileListResponse">
+ <part element="SAPControl:GetLogFileListResponse" name="parameters"/>
+</message>
+
+<message name="RequestLogonFileRequest">
+ <part element="SAPControl:RequestLogonFile" name="parameters"/>
+</message>
+
+<message name="RequestLogonFileResponse">
+ <part element="SAPControl:RequestLogonFileResponse" name="parameters"/>
+</message>
+
+<message name="HACheckConfigRequest">
+ <part element="SAPControl:HACheckConfig" name="parameters"/>
+</message>
+
+<message name="HACheckConfigResponse">
+ <part element="SAPControl:HACheckConfigResponse" name="parameters"/>
+</message>
+
+<message name="HACheckFailoverConfigRequest">
+ <part element="SAPControl:HACheckFailoverConfig" name="parameters"/>
+</message>
+
+<message name="HACheckFailoverConfigResponse">
+ <part element="SAPControl:HACheckFailoverConfigResponse" name="parameters"/>
+</message>
+
+<message name="HAGetFailoverConfigRequest">
+ <part element="SAPControl:HAGetFailoverConfig" name="parameters"/>
+</message>
+
+<message name="HAGetFailoverConfigResponse">
+ <part element="SAPControl:HAGetFailoverConfigResponse" name="parameters"/>
+</message>
+
+<message name="HAFailoverToNodeRequest">
+ <part element="SAPControl:HAFailoverToNode" name="parameters"/>
+</message>
+
+<message name="HAFailoverToNodeResponse">
+ <part element="SAPControl:HAFailoverToNodeResponse" name="parameters"/>
+</message>
+
+<message name="StartBypassHARequest">
+ <part element="SAPControl:StartBypassHA" name="parameters"/>
+</message>
+
+<message name="StartBypassHAResponse">
+ <part element="SAPControl:StartBypassHAResponse" name="parameters"/>
+</message>
+
+<message name="StopBypassHARequest">
+ <part element="SAPControl:StopBypassHA" name="parameters"/>
+</message>
+
+<message name="StopBypassHAResponse">
+ <part element="SAPControl:StopBypassHAResponse" name="parameters"/>
+</message>
+
+<message name="GetCallstackRequest">
+ <part element="SAPControl:GetCallstack" name="parameters"/>
+</message>
+
+<message name="GetCallstackResponse">
+ <part element="SAPControl:GetCallstackResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetProcessListRequest">
+ <part element="SAPControl:J2EEGetProcessList" name="parameters"/>
+</message>
+
+<message name="J2EEGetProcessListResponse">
+ <part element="SAPControl:J2EEGetProcessListResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetProcessList2Request">
+ <part element="SAPControl:J2EEGetProcessList2" name="parameters"/>
+</message>
+
+<message name="J2EEGetProcessList2Response">
+ <part element="SAPControl:J2EEGetProcessList2Response" name="parameters"/>
+</message>
+
+<message name="J2EEControlProcessRequest">
+ <part element="SAPControl:J2EEControlProcess" name="parameters"/>
+</message>
+
+<message name="J2EEControlProcessResponse">
+ <part element="SAPControl:J2EEControlProcessResponse" name="parameters"/>
+</message>
+
+<message name="J2EEControlClusterRequest">
+ <part element="SAPControl:J2EEControlCluster" name="parameters"/>
+</message>
+
+<message name="J2EEControlClusterResponse">
+ <part element="SAPControl:J2EEControlClusterResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetThreadListRequest">
+ <part element="SAPControl:J2EEGetThreadList" name="parameters"/>
+</message>
+
+<message name="J2EEGetThreadListResponse">
+ <part element="SAPControl:J2EEGetThreadListResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetThreadList2Request">
+ <part element="SAPControl:J2EEGetThreadList2" name="parameters"/>
+</message>
+
+<message name="J2EEGetThreadList2Response">
+ <part element="SAPControl:J2EEGetThreadList2Response" name="parameters"/>
+</message>
+
+<message name="J2EEGetSessionListRequest">
+ <part element="SAPControl:J2EEGetSessionList" name="parameters"/>
+</message>
+
+<message name="J2EEGetSessionListResponse">
+ <part element="SAPControl:J2EEGetSessionListResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetWebSessionListRequest">
+ <part element="SAPControl:J2EEGetWebSessionList" name="parameters"/>
+</message>
+
+<message name="J2EEGetWebSessionListResponse">
+ <part element="SAPControl:J2EEGetWebSessionListResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetWebSessionList2Request">
+ <part element="SAPControl:J2EEGetWebSessionList2" name="parameters"/>
+</message>
+
+<message name="J2EEGetWebSessionList2Response">
+ <part element="SAPControl:J2EEGetWebSessionList2Response" name="parameters"/>
+</message>
+
+<message name="J2EEGetCacheStatisticRequest">
+ <part element="SAPControl:J2EEGetCacheStatistic" name="parameters"/>
+</message>
+
+<message name="J2EEGetCacheStatisticResponse">
+ <part element="SAPControl:J2EEGetCacheStatisticResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetCacheStatistic2Request">
+ <part element="SAPControl:J2EEGetCacheStatistic2" name="parameters"/>
+</message>
+
+<message name="J2EEGetCacheStatistic2Response">
+ <part element="SAPControl:J2EEGetCacheStatistic2Response" name="parameters"/>
+</message>
+
+<message name="J2EEGetApplicationAliasListRequest">
+ <part element="SAPControl:J2EEGetApplicationAliasList" name="parameters"/>
+</message>
+
+<message name="J2EEGetApplicationAliasListResponse">
+ <part element="SAPControl:J2EEGetApplicationAliasListResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetVMGCHistoryRequest">
+ <part element="SAPControl:J2EEGetVMGCHistory" name="parameters"/>
+</message>
+
+<message name="J2EEGetVMGCHistoryResponse">
+ <part element="SAPControl:J2EEGetVMGCHistoryResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetVMGCHistory2Request">
+ <part element="SAPControl:J2EEGetVMGCHistory2" name="parameters"/>
+</message>
+
+<message name="J2EEGetVMGCHistory2Response">
+ <part element="SAPControl:J2EEGetVMGCHistory2Response" name="parameters"/>
+</message>
+
+<message name="J2EEGetVMHeapInfoRequest">
+ <part element="SAPControl:J2EEGetVMHeapInfo" name="parameters"/>
+</message>
+
+<message name="J2EEGetVMHeapInfoResponse">
+ <part element="SAPControl:J2EEGetVMHeapInfoResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetEJBSessionListRequest">
+ <part element="SAPControl:J2EEGetEJBSessionList" name="parameters"/>
+</message>
+
+<message name="J2EEGetEJBSessionListResponse">
+ <part element="SAPControl:J2EEGetEJBSessionListResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetRemoteObjectListRequest">
+ <part element="SAPControl:J2EEGetRemoteObjectList" name="parameters"/>
+</message>
+
+<message name="J2EEGetRemoteObjectListResponse">
+ <part element="SAPControl:J2EEGetRemoteObjectListResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetClusterMsgListRequest">
+ <part element="SAPControl:J2EEGetClusterMsgList" name="parameters"/>
+</message>
+
+<message name="J2EEGetClusterMsgListResponse">
+ <part element="SAPControl:J2EEGetClusterMsgListResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetSharedTableInfoRequest">
+ <part element="SAPControl:J2EEGetSharedTableInfo" name="parameters"/>
+</message>
+
+<message name="J2EEGetSharedTableInfoResponse">
+ <part element="SAPControl:J2EEGetSharedTableInfoResponse" name="parameters"/>
+</message>
+
+<message name="J2EEEnableDbgSessionRequest">
+ <part element="SAPControl:J2EEEnableDbgSession" name="parameters"/>
+</message>
+
+<message name="J2EEEnableDbgSessionResponse">
+ <part element="SAPControl:J2EEEnableDbgSessionResponse" name="parameters"/>
+</message>
+
+<message name="J2EEDisableDbgSessionRequest">
+ <part element="SAPControl:J2EEDisableDbgSession" name="parameters"/>
+</message>
+
+<message name="J2EEDisableDbgSessionResponse">
+ <part element="SAPControl:J2EEDisableDbgSessionResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetThreadCallStackRequest">
+ <part element="SAPControl:J2EEGetThreadCallStack" name="parameters"/>
+</message>
+
+<message name="J2EEGetThreadCallStackResponse">
+ <part element="SAPControl:J2EEGetThreadCallStackResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetThreadTaskStackRequest">
+ <part element="SAPControl:J2EEGetThreadTaskStack" name="parameters"/>
+</message>
+
+<message name="J2EEGetThreadTaskStackResponse">
+ <part element="SAPControl:J2EEGetThreadTaskStackResponse" name="parameters"/>
+</message>
+
+<message name="J2EEGetComponentListRequest">
+ <part element="SAPControl:J2EEGetComponentList" name="parameters"/>
+</message>
+
+<message name="J2EEGetComponentListResponse">
+ <part element="SAPControl:J2EEGetComponentListResponse" name="parameters"/>
+</message>
+
+<message name="J2EEControlComponentsRequest">
+ <part element="SAPControl:J2EEControlComponents" name="parameters"/>
+</message>
+
+<message name="J2EEControlComponentsResponse">
+ <part element="SAPControl:J2EEControlComponentsResponse" name="parameters"/>
+</message>
+
+<message name="ICMGetThreadListRequest">
+ <part element="SAPControl:ICMGetThreadList" name="parameters"/>
+</message>
+
+<message name="ICMGetThreadListResponse">
+ <part element="SAPControl:ICMGetThreadListResponse" name="parameters"/>
+</message>
+
+<message name="ICMGetConnectionListRequest">
+ <part element="SAPControl:ICMGetConnectionList" name="parameters"/>
+</message>
+
+<message name="ICMGetConnectionListResponse">
+ <part element="SAPControl:ICMGetConnectionListResponse" name="parameters"/>
+</message>
+
+<message name="ICMGetCacheEntriesRequest">
+ <part element="SAPControl:ICMGetCacheEntries" name="parameters"/>
+</message>
+
+<message name="ICMGetCacheEntriesResponse">
+ <part element="SAPControl:ICMGetCacheEntriesResponse" name="parameters"/>
+</message>
+
+<message name="ICMGetProxyConnectionListRequest">
+ <part element="SAPControl:ICMGetProxyConnectionList" name="parameters"/>
+</message>
+
+<message name="ICMGetProxyConnectionListResponse">
+ <part element="SAPControl:ICMGetProxyConnectionListResponse" name="parameters"/>
+</message>
+
+<message name="WebDispGetServerListRequest">
+ <part element="SAPControl:WebDispGetServerList" name="parameters"/>
+</message>
+
+<message name="WebDispGetServerListResponse">
+ <part element="SAPControl:WebDispGetServerListResponse" name="parameters"/>
+</message>
+
+<message name="EnqGetLockTableRequest">
+ <part element="SAPControl:EnqGetLockTable" name="parameters"/>
+</message>
+
+<message name="EnqGetLockTableResponse">
+ <part element="SAPControl:EnqGetLockTableResponse" name="parameters"/>
+</message>
+
+<message name="EnqRemoveLocksRequest">
+ <part element="SAPControl:EnqRemoveLocks" name="parameters"/>
+</message>
+
+<message name="EnqRemoveLocksResponse">
+ <part element="SAPControl:EnqRemoveLocksResponse" name="parameters"/>
+</message>
+
+<message name="EnqGetStatisticRequest">
+ <part element="SAPControl:EnqGetStatistic" name="parameters"/>
+</message>
+
+<message name="EnqStatistic">
+ <part element="SAPControl:EnqStatistic" name="parameters"/>
+</message>
+
+<portType name="SAPControlPortType">
+ <operation name="Start">
+  <documentation>Triggers an instance start and returns immediately.</documentation>
+  <input message="tns:StartRequest"/>
+  <output message="tns:StartResponse"/>
+ </operation>
+ <operation name="InstanceStart">
+  <documentation>Triggers a start of another instance of the system and returns immediately.</documentation>
+  <input message="tns:InstanceStartRequest"/>
+  <output message="tns:InstanceStartResponse"/>
+ </operation>
+ <operation name="Bootstrap">
+  <documentation>Executes bootstrap of actual or other instance of the system, webservice restarts after return.</documentation>
+  <input message="tns:BootstrapRequest"/>
+  <output message="tns:BootstrapResponse"/>
+ </operation>
+ <operation name="Stop">
+  <documentation>Triggers an instance stop and returns immediately.</documentation>
+  <input message="tns:StopRequest"/>
+  <output message="tns:StopResponse"/>
+ </operation>
+ <operation name="InstanceStop">
+  <documentation>Triggers a stop of another instance of the system and returns immediately.</documentation>
+  <input message="tns:InstanceStopRequest"/>
+  <output message="tns:InstanceStopResponse"/>
+ </operation>
+ <operation name="Shutdown">
+  <documentation>Triggers a graceful instance stop and returns immediately.</documentation>
+  <input message="tns:ShutdownRequest"/>
+  <output message="tns:ShutdownResponse"/>
+ </operation>
+ <operation name="ParameterValue">
+  <documentation>Returns a SAP profile parameter value for a given profile parameter. If the given profile parameter is empty it returns a string with all known parameter value pairs separated by newline.</documentation>
+  <input message="tns:ParameterValueRequest"/>
+  <output message="tns:ParameterValueResponse"/>
+ </operation>
+ <operation name="GetProcessList">
+  <documentation>Returns a list of all processes directly started by the webservice according to the SAP start profile.</documentation>
+  <input message="tns:GetProcessListRequest"/>
+  <output message="tns:GetProcessListResponse"/>
+ </operation>
+ <operation name="GetStartProfile">
+  <documentation>Returns start profile name and content as array of lines.</documentation>
+  <input message="tns:GetStartProfileRequest"/>
+  <output message="tns:GetStartProfileResponse"/>
+ </operation>
+ <operation name="GetTraceFile">
+  <documentation>Returns webservice trace file name and content as array of lines.</documentation>
+  <input message="tns:GetTraceFileRequest"/>
+  <output message="tns:GetTraceFileResponse"/>
+ </operation>
+ <operation name="GetAlertTree">
+  <documentation>Returns CCMS Alert tree as an array, parent-child node relationship is encoded via the parent index of each node (similar to rz20 transaction).</documentation>
+  <input message="tns:GetAlertTreeRequest"/>
+  <output message="tns:GetAlertTreeResponse"/>
+ </operation>
+ <operation name="GetAlerts">
+  <documentation>Returns a list of all CCMS alerts for a given node and it's child nodes.</documentation>
+  <input message="tns:GetAlertsRequest"/>
+  <output message="tns:GetAlertsResponse"/>
+ </operation>
+ <operation name="RestartService">
+  <documentation>Triggers webservice restart without any effects on the eventually running instance and returns immediately.</documentation>
+  <input message="tns:RestartServiceRequest"/>
+  <output message="tns:RestartServiceResponse"/>
+ </operation>
+ <operation name="StopService">
+  <documentation>Triggers webservice stop without any effects on the eventually running instance and returns immediately. After that the webservice needs to started in order to use the interface again.</documentation>
+  <input message="tns:StopServiceRequest"/>
+  <output message="tns:StopServiceResponse"/>
+ </operation>
+ <operation name="GetEnvironment">
+  <documentation>Returns the process environment as an array of strings.</documentation>
+  <input message="tns:GetEnvironmentRequest"/>
+  <output message="tns:GetEnvironmentResponse"/>
+ </operation>
+ <operation name="ListDeveloperTraces">
+  <documentation>Returns a list of all instance trace files (superseded by ListLogFiles).</documentation>
+  <input message="tns:ListDeveloperTracesRequest"/>
+  <output message="tns:ListDeveloperTracesResponse"/>
+ </operation>
+ <operation name="ReadDeveloperTrace">
+  <documentation>Returns the content of a given trace file. Use size=0 to read the entire file, size bigger 0 to read the first size bytes, size smaller 0 to read the last size bytes (superseded by ReadLogFile).</documentation>
+  <input message="tns:ReadDeveloperTraceRequest"/>
+  <output message="tns:ReadDeveloperTraceResponse"/>
+ </operation>
+ <operation name="RestartInstance">
+  <documentation>Triggers an instance restart and returns immediately.</documentation>
+  <input message="tns:RestartInstanceRequest"/>
+  <output message="tns:RestartInstanceResponse"/>
+ </operation>
+ <operation name="SendSignal">
+  <documentation>Sends a given OS signal to a given process. The signal can be given by name or number.</documentation>
+  <input message="tns:SendSignalRequest"/>
+  <output message="tns:SendSignalResponse"/>
+ </operation>
+ <operation name="GetVersionInfo">
+  <documentation>Returns a list version information for the most important files of the instance</documentation>
+  <input message="tns:GetVersionInfoRequest"/>
+  <output message="tns:GetVersionInfoResponse"/>
+ </operation>
+ <operation name="GetQueueStatistic">
+  <documentation>Returns a list of queue information of work processes and icm (similar to dpmon).</documentation>
+  <input message="tns:GetQueueStatisticRequest"/>
+  <output message="tns:GetQueueStatisticResponse"/>
+ </operation>
+ <operation name="GetInstanceProperties">
+  <documentation>Returns a list of available instance features and information how to get it.</documentation>
+  <input message="tns:GetInstancePropertiesRequest"/>
+  <output message="tns:GetInstancePropertiesResponse"/>
+ </operation>
+ <operation name="OSExecute">
+  <documentation>Executes an external OS command.</documentation>
+  <input message="tns:OSExecuteRequest"/>
+  <output message="tns:OSExecuteResponse"/>
+ </operation>
+ <operation name="ReadLogFile">
+  <documentation>Returns the content of a given log file. Use statecookie to specify starting position (""=beginning), use maxentries to specify upper limit of returned entries (0=all) and reading direction (positive: forward, negative: backward).</documentation>
+  <input message="tns:ReadLogFileRequest"/>
+  <output message="tns:ReadLogFileResponse"/>
+ </operation>
+ <operation name="ListLogFiles">
+  <documentation>Returns a list of all instance log files.</documentation>
+  <input message="tns:ListLogFilesRequest"/>
+  <output message="tns:ListLogFilesResponse"/>
+ </operation>
+ <operation name="AnalyseLogFiles">
+  <documentation>Service definition of function SAPControl__AnalyseLogFiles</documentation>
+  <input message="tns:AnalyseLogFilesRequest"/>
+  <output message="tns:AnalyseLogFilesResponse"/>
+ </operation>
+ <operation name="GetAccessPointList">
+  <documentation>Returns a list of instance network access points.</documentation>
+  <input message="tns:GetAccessPointListRequest"/>
+  <output message="tns:GetAccessPointListResponse"/>
+ </operation>
+ <operation name="GetSystemInstanceList">
+  <documentation>Returns a list of SAP instances of the SAP system.</documentation>
+  <input message="tns:GetSystemInstanceListRequest"/>
+  <output message="tns:GetSystemInstanceListResponse"/>
+ </operation>
+ <operation name="StartSystem">
+  <documentation>Triggers start of entire system or parts of it.</documentation>
+  <input message="tns:StartSystemRequest"/>
+  <output message="tns:StartSystemResponse"/>
+ </operation>
+ <operation name="StopSystem">
+  <documentation>Triggers stop or soft shutdown of entire system or parts of it.</documentation>
+  <input message="tns:StopSystemRequest"/>
+  <output message="tns:StopSystemResponse"/>
+ </operation>
+ <operation name="RestartSystem">
+  <documentation>Triggers restart of entire system or parts of it.</documentation>
+  <input message="tns:RestartSystemRequest"/>
+  <output message="tns:RestartSystemResponse"/>
+ </operation>
+ <operation name="AccessCheck">
+  <documentation>Checks execute permission of webservice function.</documentation>
+  <input message="tns:AccessCheckRequest"/>
+  <output message="tns:AccessCheckResponse"/>
+ </operation>
+ <operation name="GetProcessParameter">
+  <documentation>Returns actual Profile Parameters for a given process.</documentation>
+  <input message="tns:GetProcessParameterRequest"/>
+  <output message="tns:GetProcessParameterResponse"/>
+ </operation>
+ <operation name="SetProcessParameter">
+  <documentation>Sets dynamic Profile Parameters for a given process.</documentation>
+  <input message="tns:SetProcessParameterRequest"/>
+  <output message="tns:SetProcessParameterResponse"/>
+ </operation>
+ <operation name="ShmDetach">
+  <documentation>Triggers sapstarstrv to detach from shared memory (for internal usage only).</documentation>
+  <input message="tns:ShmDetachRequest"/>
+  <output message="tns:ShmDetachResponse"/>
+ </operation>
+ <operation name="GetSecNetworkId">
+  <documentation>Returns a unique network ID and verification proof for a given service.</documentation>
+  <input message="tns:GetSecNetworkIdRequest"/>
+  <output message="tns:GetSecNetworkIdResponse"/>
+ </operation>
+ <operation name="GetNetworkId">
+  <documentation>Returns a unique network ID for a given service.</documentation>
+  <input message="tns:GetNetworkIdRequest"/>
+  <output message="tns:GetNetworkIdResponse"/>
+ </operation>
+ <operation name="CreateSnapshot">
+  <documentation>Creates a zipped instance snapshot on the server side.</documentation>
+  <input message="tns:CreateSnapshotRequest"/>
+  <output message="tns:CreateSnapshotResponse"/>
+ </operation>
+ <operation name="ReadSnapshot">
+  <documentation>Downloads a zipped snapshot from the server.</documentation>
+  <input message="tns:ReadSnapshotRequest"/>
+  <output message="tns:ReadSnapshotResponse"/>
+ </operation>
+ <operation name="ListSnapshots">
+  <documentation>Returns a list of all available snapshots on the server side.</documentation>
+  <input message="tns:ListSnapshotsRequest"/>
+  <output message="tns:ListSnapshotsResponse"/>
+ </operation>
+ <operation name="DeleteSnapshots">
+  <documentation>Deletes snapshot(s) on the server side.</documentation>
+  <input message="tns:DeleteSnapshotsRequest"/>
+  <output message="tns:DeleteSnapshotsResponse"/>
+ </operation>
+ <operation name="ABAPReadSyslog">
+  <documentation>Reads the SAP ABAP Syslog and returns it as an array of entries (similar to sm21 transaction).</documentation>
+  <input message="tns:ABAPReadSyslogRequest"/>
+  <output message="tns:ABAPReadSyslogResponse"/>
+ </operation>
+ <operation name="ABAPReadRawSyslog">
+  <documentation>Reads the SAP ABAP Syslog and returns it as an array of raw entries (similar to sm21 transaction).</documentation>
+  <input message="tns:ABAPReadRawSyslogRequest"/>
+  <output message="tns:ABAPReadRawSyslogResponse"/>
+ </operation>
+ <operation name="ABAPGetWPTable">
+  <documentation>Returns a list of the ABAP workprocesses (similar to sm50 transaction).</documentation>
+  <input message="tns:ABAPGetWPTableRequest"/>
+  <output message="tns:ABAPGetWPTableResponse"/>
+ </operation>
+ <operation name="ABAPAcknowledgeAlerts">
+  <documentation>Acknowledge CCMS Alerts in the SAP ABAP system. Requires SAP user credentials and a list of alert ids to acknowledge. Returns a list of success code for each alerts (1=success, 0=failure).</documentation>
+  <input message="tns:ABAPAcknowledgeAlertsRequest"/>
+  <output message="tns:ABAPAcknowledgeAlertsResponse"/>
+ </operation>
+ <operation name="ABAPGetSystemWPTable">
+  <documentation>Returns a list of all or all active ABAP workprocesses in the system (similar to sm66 transaction).</documentation>
+  <input message="tns:ABAPGetSystemWPTableRequest"/>
+  <output message="tns:ABAPGetSystemWPTableResponse"/>
+ </operation>
+ <operation name="RequestTicket">
+  <documentation>Internal usage only.</documentation>
+  <input message="tns:RequestTicketRequest"/>
+  <output message="tns:RequestTicketResponse"/>
+ </operation>
+ <operation name="SendTicket">
+  <documentation>Internal usage only.</documentation>
+  <input message="tns:SendTicketRequest"/>
+  <output message="tns:SendTicketResponse"/>
+ </operation>
+ <operation name="ConfigureLogFileList">
+  <documentation>Configures a list of logfiles accessable via ReadLogFile (Hostagent mode only).</documentation>
+  <input message="tns:ConfigureLogFileListRequest"/>
+  <output message="tns:ConfigureLogFileListResponse"/>
+ </operation>
+ <operation name="GetLogFileList">
+  <documentation>Returns a list of configured logfiles accessable via ReadLogFile (Hostagent mode only).</documentation>
+  <input message="tns:GetLogFileListRequest"/>
+  <output message="tns:GetLogFileListResponse"/>
+ </operation>
+ <operation name="RequestLogonFile">
+  <documentation>Returns a logon file for local authentication.</documentation>
+  <input message="tns:RequestLogonFileRequest"/>
+  <output message="tns:RequestLogonFileResponse"/>
+ </operation>
+ <operation name="HACheckConfig">
+  <documentation>Checks high availability configurration and status of the system.</documentation>
+  <input message="tns:HACheckConfigRequest"/>
+  <output message="tns:HACheckConfigResponse"/>
+ </operation>
+ <operation name="HACheckFailoverConfig">
+  <documentation>Checks HA failover third party configuration and status of an instnace.</documentation>
+  <input message="tns:HACheckFailoverConfigRequest"/>
+  <output message="tns:HACheckFailoverConfigResponse"/>
+ </operation>
+ <operation name="HAGetFailoverConfig">
+  <documentation>Returns HA failover third party information.</documentation>
+  <input message="tns:HAGetFailoverConfigRequest"/>
+  <output message="tns:HAGetFailoverConfigResponse"/>
+ </operation>
+ <operation name="HAFailoverToNode">
+  <documentation>Moves instance to given HA cluster node.</documentation>
+  <input message="tns:HAFailoverToNodeRequest"/>
+  <output message="tns:HAFailoverToNodeResponse"/>
+ </operation>
+ <operation name="StartBypassHA">
+  <documentation>Triggers an instance start without checking HA product integration and returns immediately (for HA product internal use only).</documentation>
+  <input message="tns:StartBypassHARequest"/>
+  <output message="tns:StartBypassHAResponse"/>
+ </operation>
+ <operation name="StopBypassHA">
+  <documentation>Triggers an instance stop without checking HA product integration and returns immediately (for HA product internal use only).</documentation>
+  <input message="tns:StopBypassHARequest"/>
+  <output message="tns:StopBypassHAResponse"/>
+ </operation>
+ <operation name="GetCallstack">
+  <documentation>Returns callstack of all threads of specified process.</documentation>
+  <input message="tns:GetCallstackRequest"/>
+  <output message="tns:GetCallstackResponse"/>
+ </operation>
+ <operation name="J2EEGetProcessList">
+  <documentation>Returns a list of J2EE processes controlled by jcontrol (superseded by J2EEGetProcessList2).</documentation>
+  <input message="tns:J2EEGetProcessListRequest"/>
+  <output message="tns:J2EEGetProcessListResponse"/>
+ </operation>
+ <operation name="J2EEGetProcessList2">
+  <documentation>Returns a list of J2EE processes controlled by jcontrol (supersedes J2EEGetProcessList).</documentation>
+  <input message="tns:J2EEGetProcessList2Request"/>
+  <output message="tns:J2EEGetProcessList2Response"/>
+ </operation>
+ <operation name="J2EEControlProcess">
+  <documentation>Performs a given function (StartInstance, StopInstance, RestartInstance, BootInstance, RebootInstance) on the J2EE instance or (EnableProcess, StartProcess, DisableProcess, StopProcess, SoftStopProcess, ActivateProcess, DeactivateProcess, RestartProcess, SoftRestartProcess, DumpStackTrace, EnableDebugging, DisableDebugging, IncrementTrace, DecrementTrace) on a given J2EE process.</documentation>
+  <input message="tns:J2EEControlProcessRequest"/>
+  <output message="tns:J2EEControlProcessResponse"/>
+ </operation>
+ <operation name="J2EEControlCluster">
+  <documentation>Service definition of function SAPControl__J2EEControlCluster</documentation>
+  <input message="tns:J2EEControlClusterRequest"/>
+  <output message="tns:J2EEControlClusterResponse"/>
+ </operation>
+ <operation name="J2EEGetThreadList">
+  <documentation>Returns a list of threads in the J2EE instance (superseded by J2EEGetThreadList2).</documentation>
+  <input message="tns:J2EEGetThreadListRequest"/>
+  <output message="tns:J2EEGetThreadListResponse"/>
+ </operation>
+ <operation name="J2EEGetThreadList2">
+  <documentation>Returns a list of threads in the J2EE instance (supersedes J2EEGetThreadList).</documentation>
+  <input message="tns:J2EEGetThreadList2Request"/>
+  <output message="tns:J2EEGetThreadList2Response"/>
+ </operation>
+ <operation name="J2EEGetSessionList">
+  <documentation>Returns a list of (HTTP) sessions in the J2EE instance (superseded by J2EEGetWebSessionList, J2EEGetWebSessionList2).</documentation>
+  <input message="tns:J2EEGetSessionListRequest"/>
+  <output message="tns:J2EEGetSessionListResponse"/>
+ </operation>
+ <operation name="J2EEGetWebSessionList">
+  <documentation>Returns a list of (HTTP) sessions in the J2EE instance (supersedes J2EEGetSessionList, superseded by J2EEGetWebSessionList2).</documentation>
+  <input message="tns:J2EEGetWebSessionListRequest"/>
+  <output message="tns:J2EEGetWebSessionListResponse"/>
+ </operation>
+ <operation name="J2EEGetWebSessionList2">
+  <documentation>Returns a list of (HTTP) sessions in the J2EE instance (supersedes J2EEGetSessionList, J2EEGetWebSessionList).</documentation>
+  <input message="tns:J2EEGetWebSessionList2Request"/>
+  <output message="tns:J2EEGetWebSessionList2Response"/>
+ </operation>
+ <operation name="J2EEGetCacheStatistic">
+  <documentation>Returns a list of caches in the J2EE instance (superseded by J2EEGetCacheStatistic2).</documentation>
+  <input message="tns:J2EEGetCacheStatisticRequest"/>
+  <output message="tns:J2EEGetCacheStatisticResponse"/>
+ </operation>
+ <operation name="J2EEGetCacheStatistic2">
+  <documentation>Returns a list of caches in the J2EE instance (supersedes J2EEGetCacheStatistic).</documentation>
+  <input message="tns:J2EEGetCacheStatistic2Request"/>
+  <output message="tns:J2EEGetCacheStatistic2Response"/>
+ </operation>
+ <operation name="J2EEGetApplicationAliasList">
+  <documentation>Returns a list of application aliases in the J2EE instance.</documentation>
+  <input message="tns:J2EEGetApplicationAliasListRequest"/>
+  <output message="tns:J2EEGetApplicationAliasListResponse"/>
+ </operation>
+ <operation name="J2EEGetVMGCHistory">
+  <documentation>Returns a list of JAVA VM garbage collections in the J2EE instance (superseded by J2EEGetVMGCHistory2).</documentation>
+  <input message="tns:J2EEGetVMGCHistoryRequest"/>
+  <output message="tns:J2EEGetVMGCHistoryResponse"/>
+ </operation>
+ <operation name="J2EEGetVMGCHistory2">
+  <documentation>Returns a list of JAVA VM garbage collections in the J2EE instance (supersedes J2EEGetVMGCHistory).</documentation>
+  <input message="tns:J2EEGetVMGCHistory2Request"/>
+  <output message="tns:J2EEGetVMGCHistory2Response"/>
+ </operation>
+ <operation name="J2EEGetVMHeapInfo">
+  <documentation>Returns a list of JAVA VM heap information.</documentation>
+  <input message="tns:J2EEGetVMHeapInfoRequest"/>
+  <output message="tns:J2EEGetVMHeapInfoResponse"/>
+ </operation>
+ <operation name="J2EEGetEJBSessionList">
+  <documentation>Returns a list of EJB sessions in the J2EE instance.</documentation>
+  <input message="tns:J2EEGetEJBSessionListRequest"/>
+  <output message="tns:J2EEGetEJBSessionListResponse"/>
+ </operation>
+ <operation name="J2EEGetRemoteObjectList">
+  <documentation>Returns a list of remote object connections in the J2EE instance.</documentation>
+  <input message="tns:J2EEGetRemoteObjectListRequest"/>
+  <output message="tns:J2EEGetRemoteObjectListResponse"/>
+ </operation>
+ <operation name="J2EEGetClusterMsgList">
+  <documentation>Returns a list of J2EE cluster communication statistic from the message server.</documentation>
+  <input message="tns:J2EEGetClusterMsgListRequest"/>
+  <output message="tns:J2EEGetClusterMsgListResponse"/>
+ </operation>
+ <operation name="J2EEGetSharedTableInfo">
+  <documentation>Returns a list of SAP startup framework shared memory table information.</documentation>
+  <input message="tns:J2EEGetSharedTableInfoRequest"/>
+  <output message="tns:J2EEGetSharedTableInfoResponse"/>
+ </operation>
+ <operation name="J2EEEnableDbgSession">
+  <documentation>Creates a J2EE debug session on  given node or automatically selected node (processname = "") with the given debug flags (blank separated keywords "SuspendAll", "CodeIsolate", "LoadIsolate", "MigrateSessions") for the given client name. Returns debug key an network port.</documentation>
+  <input message="tns:J2EEEnableDbgSessionRequest"/>
+  <output message="tns:J2EEEnableDbgSessionResponse"/>
+ </operation>
+ <operation name="J2EEDisableDbgSession">
+  <documentation>Removes a J2EE debug session created by J2EEEnableDbgSession.</documentation>
+  <input message="tns:J2EEDisableDbgSessionRequest"/>
+  <output message="tns:J2EEDisableDbgSessionResponse"/>
+ </operation>
+ <operation name="J2EEGetThreadCallStack">
+  <documentation>Returns java callstack of specified J2EE thread or all J2EE threads (index = -1).</documentation>
+  <input message="tns:J2EEGetThreadCallStackRequest"/>
+  <output message="tns:J2EEGetThreadCallStackResponse"/>
+ </operation>
+ <operation name="J2EEGetThreadTaskStack">
+  <documentation>Returns java taskstack of specified J2EE thread or all J2EE threads (index = -1).</documentation>
+  <input message="tns:J2EEGetThreadTaskStackRequest"/>
+  <output message="tns:J2EEGetThreadTaskStackResponse"/>
+ </operation>
+ <operation name="J2EEGetComponentList">
+  <documentation>Returns a list of J2EE services and applications.</documentation>
+  <input message="tns:J2EEGetComponentListRequest"/>
+  <output message="tns:J2EEGetComponentListResponse"/>
+ </operation>
+ <operation name="J2EEControlComponents">
+  <documentation>Performs a given function (start/stop/restart) on the given J2EE components on the given J2EE process.</documentation>
+  <input message="tns:J2EEControlComponentsRequest"/>
+  <output message="tns:J2EEControlComponentsResponse"/>
+ </operation>
+ <operation name="ICMGetThreadList">
+  <documentation>Returns a list of threads used by ICM.</documentation>
+  <input message="tns:ICMGetThreadListRequest"/>
+  <output message="tns:ICMGetThreadListResponse"/>
+ </operation>
+ <operation name="ICMGetConnectionList">
+  <documentation>Returns a list of incoming network connections handled by ICM.</documentation>
+  <input message="tns:ICMGetConnectionListRequest"/>
+  <output message="tns:ICMGetConnectionListResponse"/>
+ </operation>
+ <operation name="ICMGetCacheEntries">
+  <documentation>Returns a list of objects cached by ICM.</documentation>
+  <input message="tns:ICMGetCacheEntriesRequest"/>
+  <output message="tns:ICMGetCacheEntriesResponse"/>
+ </operation>
+ <operation name="ICMGetProxyConnectionList">
+  <documentation>Returns a list of outgoing network proxy connections handled by ICM.</documentation>
+  <input message="tns:ICMGetProxyConnectionListRequest"/>
+  <output message="tns:ICMGetProxyConnectionListResponse"/>
+ </operation>
+ <operation name="WebDispGetServerList">
+  <documentation>Returns a list backend servers connected to the webdispatcher.</documentation>
+  <input message="tns:WebDispGetServerListRequest"/>
+  <output message="tns:WebDispGetServerListResponse"/>
+ </operation>
+ <operation name="EnqGetLockTable">
+  <documentation>Returns enque locking table.</documentation>
+  <input message="tns:EnqGetLockTableRequest"/>
+  <output message="tns:EnqGetLockTableResponse"/>
+ </operation>
+ <operation name="EnqRemoveLocks">
+  <documentation>Removes locks from enque locking table.</documentation>
+  <input message="tns:EnqRemoveLocksRequest"/>
+  <output message="tns:EnqRemoveLocksResponse"/>
+ </operation>
+ <operation name="EnqGetStatistic">
+  <documentation>Returns enque statistic.</documentation>
+  <input message="tns:EnqGetStatisticRequest"/>
+  <output message="tns:EnqStatistic"/>
+ </operation>
+</portType>
+
+<binding name="SAPControl" type="tns:SAPControlPortType">
+ <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="Start">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="InstanceStart">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="Bootstrap">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="Stop">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="InstanceStop">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="Shutdown">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ParameterValue">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetProcessList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetStartProfile">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetTraceFile">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetAlertTree">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetAlerts">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="RestartService">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="StopService">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetEnvironment">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ListDeveloperTraces">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ReadDeveloperTrace">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="RestartInstance">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="SendSignal">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetVersionInfo">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetQueueStatistic">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetInstanceProperties">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="OSExecute">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ReadLogFile">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ListLogFiles">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="AnalyseLogFiles">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetAccessPointList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetSystemInstanceList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="StartSystem">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="StopSystem">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="RestartSystem">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="AccessCheck">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetProcessParameter">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="SetProcessParameter">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ShmDetach">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetSecNetworkId">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetNetworkId">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="CreateSnapshot">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ReadSnapshot">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ListSnapshots">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="DeleteSnapshots">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ABAPReadSyslog">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ABAPReadRawSyslog">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ABAPGetWPTable">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ABAPAcknowledgeAlerts">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ABAPGetSystemWPTable">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="RequestTicket">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="SendTicket">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ConfigureLogFileList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetLogFileList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="RequestLogonFile">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="HACheckConfig">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="HACheckFailoverConfig">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="HAGetFailoverConfig">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="HAFailoverToNode">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="StartBypassHA">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="StopBypassHA">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="GetCallstack">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetProcessList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetProcessList2">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEControlProcess">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEControlCluster">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetThreadList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetThreadList2">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetSessionList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetWebSessionList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetWebSessionList2">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetCacheStatistic">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetCacheStatistic2">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetApplicationAliasList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetVMGCHistory">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetVMGCHistory2">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetVMHeapInfo">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetEJBSessionList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetRemoteObjectList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetClusterMsgList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetSharedTableInfo">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEEnableDbgSession">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEDisableDbgSession">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetThreadCallStack">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetThreadTaskStack">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEGetComponentList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="J2EEControlComponents">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ICMGetThreadList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ICMGetConnectionList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ICMGetCacheEntries">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="ICMGetProxyConnectionList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="WebDispGetServerList">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="EnqGetLockTable">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="EnqRemoveLocks">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+ <operation name="EnqGetStatistic">
+  <SOAP:operation soapAction=""/>
+  <input>
+   <SOAP:body use="literal"/>
+  </input>
+  <output>
+   <SOAP:body use="literal"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="SAPControl">
+ <documentation>The SAPControl webservice can be used to control and monitor a single SAP instance. Some methods may fail with HTTP error 401 without user authentication. Use HTTP basic authentication (UTF8 encoded) to provide OS user credentials. By default the service uses port 5$(SAPSYSTEM)13 for HTTP and 5$(SAPSYSTEM)14 for HTTPS (if SSL is configured for the instance), this might be overridden in etc/service by specifying sapctrl$(SAPSYSTEM) and sapctrls$(SAPSYSTEM).</documentation>
+ <port binding="tns:SAPControl" name="SAPControl">
+  <SOAP:address location="http://orenjc201.dev2.sap.int.origin.com.au:50313/SAPControl.cgi"/>
+ </port>
+</service>
+
+</definitions>
